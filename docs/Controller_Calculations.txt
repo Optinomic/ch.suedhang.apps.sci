@@ -1,0 +1,228 @@
+
+
+
+ESCI_Score_Bel
+ESCIBelastung_ESCIB1::int4 + ESCIBelastung_ESCIB2::int4 + ESCIBelastung_ESCIB3::int4 + ESCIBelastung_ESCIB4::int4 + ESCIBelastung_ESCIB5::int4 + ESCIBelastung_ESCIB6::int4 + ESCIBelastung_ESCIB7::int4
+
+ESCI_Score_Stress
+ESCISymptome_ESCIS1::int4 + ESCISymptome_ESCIS2::int4 + ESCISymptome_ESCIS3::int4 + ESCISymptome_ESCIS4::int4 + ESCISymptome_ESCIS5::int4 + ESCISymptome_ESCIS6::int4 + ESCISymptome_ESCIS7::int4 + ESCISymptome_ESCIS8::int4 + ESCISymptome_ESCIS9::int4 + ESCISymptome_ESCI10::int4 + ESCISymptome_ESCI11::int4 + ESCISymptome_ESCI12::int4 + ESCISymptome_ESCI13::int4
+
+ESCI_Score_Coping_Pos
+ESCICoping_ESCIC1::int4 + ESCICoping_ESCIC5::int4 + ESCICoping_ESCIC6::int4 + ESCICoping_ESCIC16::int4
+
+ESCI_Score_Coping_AB
+ESCICoping_ESCIC3::int4 + ESCICoping_ESCIC7::int4 + ESCICoping_ESCIC12::int4 + ESCICoping_ESCIC17::int4
+
+ESCI_Score_Coping_SU
+ESCICoping_ESCIC4::int4 + ESCICoping_ESCIC13::int4 + ESCICoping_ESCIC15::int4 + ESCICoping_ESCIC19::int4
+
+ESCI_Score_Coping_REL
+ESCESCI_Score_Coping_RELICoping_ESCIC8::int4 + ESCICoping_ESCIC90::int4 + ESCICoping_ESCIC10::int4 + ESCICoping_ESCIC18::int4
+
+ESCI_Score_Coping_ALK
+(5-ESCICoping_ESCIC2::int4) + ESCICoping_ESCIC11::int4 + ESCICoping_ESCIC14::int4 + ESCICoping_ESCIC20::int4
+
+
+
+
+
+function($scope) {
+
+    // Init
+    set_nice_birthday();
+
+    // Results
+    var myscope = $scope.sci;
+
+    // Title
+    $scope.current_directive = {
+        "title": "Stress- und Coping-Inventar (SCI)",
+        "description": "Messung von Stressbelastung, Stresssymptomen und Stressbewältigungs-Strategien (Coping)",
+        "info": $scope.patient.lastName + ' ' + $scope.patient.firstName + ' ( ' + $scope.patient.birthday + ' | ' + $scope.patient.age + ' ):'
+    };
+
+    // Get current population
+    $scope.current_population = get_population($scope.patient.age, $scope.patient.gender);
+
+    // Functions
+
+    function set_nice_birthday() {
+        //console.log('set_nice_birthday', $scope.patient.birthdate);
+        var today = new Date();
+        var birthDate = new Date($scope.patient.birthdate);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        //console.log('age', age);
+
+        if ($scope.patient.birthdate !== null) {
+            $scope.patient.birthday = $scope.patient.birthdate.substring(0, 10);
+            $scope.patient.age = age;
+        } else {
+            $scope.patient.birthday = 'unknown';
+            $scope.patient.age = '?';
+        }
+        //console.log('$scope.patient.birthday = ', $scope.patient.birthday);
+    }
+
+
+
+    function get_stanine(scale, score) {
+        // Variablen initialisieren
+        var stanine = 0;
+
+        if (score >= $scope.current_population[scale].UG1) {
+            stanine = 1;
+        }
+        if (score >= $scope.current_population[scale].UG2) {
+            stanine = 2;
+        }
+        if (score >= $scope.current_population[scale].UG3) {
+            stanine = 3;
+        }
+        if (score >= $scope.current_population[scale].UG4) {
+            stanine = 4;
+        }
+        if (score >= $scope.current_population[scale].UG5) {
+            stanine = 5;
+        }
+        if (score >= $scope.current_population[scale].UG6) {
+            stanine = 6;
+        }
+        if (score >= $scope.current_population[scale].UG7) {
+            stanine = 7;
+        }
+        if (score >= $scope.current_population[scale].UG8) {
+            stanine = 8;
+        }
+        if (score >= $scope.current_population[scale].UG9) {
+            stanine = 9;
+        }
+
+        //console.log('Current population = ', $scope.current_population[scale]);
+        //console.log('get_stanine::  Scale:' + scale + ', Score:' + score + ' = Stanine:' + stanine);
+        return stanine;
+    };
+
+
+    //console.log('Patient', $scope.patient);
+
+    if (myscope !== undefined) {
+
+        $scope.have_data = true;
+
+        // SORT (ARRAY of Objects) - datestamp ascending
+        myscope = myscope.sort(function(a, b) {
+            var dateA = new Date(a.datestamp),
+                dateB = new Date(b.datestamp)
+                return dateA - dateB //sort by date ascending
+        });
+
+        // Loop durch alle Ergebnisse (Messungen)
+        for (var i = 0; i < myscope.length; i++) {
+
+            // Variablen initialisieren
+
+            myscope[i].label = {
+                "results": {
+                     "0": {
+                        "question": "Stress durch Verlust",
+                        "sub_left": "Keine Belastung durch Verlust und negative Ereignisse",
+                        "sub_right": "Belastung durch Verlust und negative Ereignisse",
+                        "stanine": 0,
+                        "sum_score": 0
+                    },
+                     "1": {
+                        "question": "Stresssymptome",
+                        "sub_left": "Wenige körperliche und psychische Symptome",
+                        "sub_right": "Viele körperliche und psychische Symptome",
+                        "stanine": 0,
+                        "sum_score": 0
+                    },
+                    "2": {
+                        "question": "Positives Denken",
+                        "sub_left": "Ungünstig: Selbstzweifel und Fokus auf Negatives",
+                        "sub_right": "Gute Stressbewältigung durch positives Denken",
+                        "stanine": 0,
+                        "sum_score": 0
+                    },
+                    "3": {
+                        "question": "Aktive Stressbewältigung",
+                        "sub_left": "Ungünstig: Stressoren werden nicht beseitigt",
+                        "sub_right": "Gute aktive und vorbeugende Stressbewältigung",
+                        "stanine": 0,
+                        "sum_score": 0
+                    },
+                    "4": {
+                        "question": "Soziale Unterstützung",
+                        "sub_left": "Ungünstig: Kaum Unterstützung durch andere",
+                        "sub_right": "Gut: Viel Unterstützung durch Freunde und Bekannte",
+                        "stanine": 0,
+                        "sum_score": 0
+                    },
+                    "5": {
+                        "question": "Halt im Glauben",
+                        "sub_left": "Ungünstig: Kaum religiöser / spiritueller Halt",
+                        "sub_right": "Gut: Person findet Halt im Glauben",
+                        "stanine": 0,
+                        "sum_score": 0
+                    },
+                    "6": {
+                        "question": "Alkohol- und Zigarettenkonsum",
+                        "sub_left": "Gut: Kein erhöhter Alkohol - oder Zigarettenkonsum",
+                        "sub_right": "Ungünstige Bewältigung durch Alkohol und Zigaretten",
+                        "stanine": 0,
+                        "sum_score": 0
+                    }
+                }
+            };
+
+
+            // Summenwerte in 'results' schreiben.
+            $scope.sci[i] = myscope[i];
+
+
+            // Loop durch alle Score-Gruppen - bestimmen der Stanine
+            for (var x = 0; x < 7; x++) {
+                // Summenscores schreiben
+                if (x === 0) {
+                    $scope.sci[i].label.results[x].sum_score = $scope.sci[i].ESCI_Score_Belastung;
+                }
+                if (x === 1) {
+                    $scope.sci[i].label.results[x].sum_score = $scope.sci[i].ESCI_Score_Stress;
+                }
+                if (x === 2) {
+                    $scope.sci[i].label.results[x].sum_score = $scope.sci[i].ESCI_Score_Coping_Pos;
+                }
+                if (x === 3) {
+                    $scope.sci[i].label.results[x].sum_score = $scope.sci[i].ESCI_Score_Coping_AB;
+                }
+                if (x === 4) {
+                    $scope.sci[i].label.results[x].sum_score = $scope.sci[i].ESCI_Score_Coping_SU;
+                }
+                if (x === 5) {
+                    $scope.sci[i].label.results[x].sum_score = $scope.sci[i].ESCI_Score_Coping_REL;
+                }
+                if (x === 6) {
+                    $scope.sci[i].label.results[x].sum_score = $scope.sci[i].ESCI_Score_Coping_ALK;
+                }
+
+                $scope.sci[i].label.population = $scope.current_population.population;
+                // Stanine berechnen und schreiben
+                $scope.sci[i].label.results[x].stanine = get_stanine(x, $scope.sci[i].label.results[x].sum_score);
+
+            }
+
+
+        }
+
+    } else {
+        $scope.have_data = false;
+    }
+    console.log($scope.current_directive.title + ' $scope = ', $scope);
+}
+
+
+

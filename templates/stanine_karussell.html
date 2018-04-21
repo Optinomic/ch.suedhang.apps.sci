@@ -1,0 +1,33 @@
+__opapp_include(../lib/html/optinomic/page/start.m4)
+<div class="grid-border-top" style="margin-top: 30px; position: relative;">
+    <h3 class="md-headline">Stressereignisse und Syptome</h3>
+    <div class="absolute" layout="row" layout-xs="row" layout-gt-xs="row" layout-align="space-between end">
+        <p class="md-caption" style="color:#4CAF50">Wenig</p>
+        <p flex>&nbsp;</p>
+        <p class="md-caption" style="color:#F44336">Viel/Ausgeprägt</p>
+    </div>
+    <chart-stanine data="d.stanine.data_stress" options="stanine.options"> </chart-stanine>
+</div>
+<div class="grid-border-top" style="margin-top: 30px; position: relative;">
+    <h3 class="md-headline">Hilfreiche Copingstrategien</h3>
+    <h4 class="md-subhead">Diese helfen die möglichen körperlichen und psychischen Stressreaktionen, welche nicht
+gesund sind, zu reduzieren. Hohe Ausprägungen sind daher gut.</h4>
+    <div class="absolute_plus" layout="row" layout-xs="row" layout-gt-xs="row" layout-align="space-between end">
+        <p class="md-caption" style="color:#F44336">Wenig</p>
+        <p flex>&nbsp;</p>
+        <p class="md-caption" style="color:#4CAF50">Viel/Ausgeprägt</p>
+    </div>
+    <chart-stanine data="d.stanine.data_hilfreich" options="stanine.options"> </chart-stanine>
+</div>
+<div class="grid-border-top" style="margin-top: 30px; position: relative;">
+    <h3 class="md-headline">Ungünstige Copingstrategie</h3>
+    <h4 class="md-subhead">Diese erhöht oder verlängert die möglichen körperlichen und psychischen Stressreaktionen,
+welche nicht gesund sind. Hohe Ausprägungen sind nicht günstig.</h4>
+    <div class="absolute_plus" layout="row" layout-xs="row" layout-gt-xs="row" layout-align="space-between end">
+        <p class="md-caption" style="color:#4CAF50">Wenig</p>
+        <p flex>&nbsp;</p>
+        <p class="md-caption" style="color:#F44336">Viel/Ausgeprägt</p>
+    </div>
+    <chart-stanine data="d.stanine.data_unguenstig" options="stanine.options"> </chart-stanine>
+</div>
+__opapp_include(../lib/html/optinomic/page/end.m4)
