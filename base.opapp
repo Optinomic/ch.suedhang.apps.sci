@@ -6,6 +6,7 @@ version = __opapp_version()
 type = patient
 
 [description]
+Messung von Stressbelastung, Stresssymptomen und Stressbewältigungs-Strategien (Coping)
 
 [developer]
 first_name = Beat
@@ -20,9 +21,7 @@ website = http://www.optinomic.com/
 __opapp_include(readme.md)
 
 [template SCI 6 12]
-__opapp_include(lib/polymer/index.m4)
-__opapp_include(elements/element-sci.html)
-__opapp_include(elements/view.html)
+__opapp_include(optinomic_lib/dist/templates/ch.suedhang.apps.sci.html)
 
 
 [dependencies]
